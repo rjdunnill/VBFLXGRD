@@ -1,6 +1,6 @@
 # VBFLXGRD
 VB FlexGrid Control (Replacement of the MSFlexGrid control)
 
-This project is intended to replace the MSFlexGrid control for VB6.
+This project is intended to replace the MSFlexGrid control of VB6 with a managed code version.
 
-http://www.vbforums.com/showthread.php?848839-VBFlexGrid-Control-(Replacement-of-the-MSFlexGrid-control)
+https://www.vbforums.com/showthread.php?891861-VBFlexGrid-NET
