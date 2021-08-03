@@ -1,5 +1,5 @@
 VERSION 5.00
-Begin VB.PropertyPage PPVBFlexGridGeneral 
+Begin VB.Form PPVBFlexGridGeneral 
    Caption         =   "General"
    ClientHeight    =   7425
    ClientLeft      =   0
@@ -459,7 +459,7 @@ Private Declare Function SendMessage Lib "user32" Alias "SendMessageW" (ByVal hW
 Private FontFixedCleared As Boolean
 Private FreezeChanged As Boolean
 
-Private Sub PropertyPage_Initialize()
+Private Sub Form_Load()
 SendMessage PropertyPage.hWnd, WM_UPDATEUISTATE, MakeDWord(UIS_CLEAR, UISF_HIDEFOCUS Or UISF_HIDEACCEL), ByVal 0&
 With ComboMousePointer
 .AddItem FlexMousePointerDefault & " - Default"

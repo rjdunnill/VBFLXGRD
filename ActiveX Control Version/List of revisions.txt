@@ -1,136 +1,481 @@
 List of revisions:
 
 03-May-2021
-- Revision update. (Version 1.4.44)
+- Removed WS_EX_NOPARENTNOTIFY in the window creation as this causes a MDI child window to not get activated.
 
 26-Mar-2021
-- Revision update. (Version 1.4.43)
+- UserControl.DrawStyle set to 5 = Transparent to avoid a wasted/unused GDI pen handle.
 
 17-Mar-2021
-- Revision update. (Version 1.4.42)
+- Improved CreateGDIFontFromOLEFont function.
+
+12-Mar-2021
+- Included the SelectRange method.
+  This method selects a range of cells or a cell (by omitting RowSel/ColSel) with a single command.
 
 08-Mar-2021
-- Revision update. (Version 1.4.41)
+- AutoSize method works now as expected if WordWrap = True and Mode = FlexAutoSizeModeRowHeight.
+- AutoSize method works now also as expected if SingleLine = True.
 
 06-Mar-2021
-- Revision update. (Version 1.4.40)
+- Bugfixes (side-effects) related of FrozenRows/FrozenCols for other properties.
+- Included FrozenRowsVisible/FrozenColsVisible property.
+- Included the enum FlexAutoSizeScopeMovable/FlexAutoSizeScopeFrozen in the AutoSize method.
+  FlexAutoSizeScopeScrollable will not autosize the frozen cells.
+  FlexAutoSizeScopeMovable contains both frozen and scrollable cells.
+- Included the enum FlexClearMovable/FlexClearFrozen in the Clear method.
+  FlexClearScrollable will not clear the frozen cells.
+  FlexClearMovable contains both frozen and scrollable cells.
 
 05-Mar-2021
-- Revision update. (Version 1.4.39)
+- Included the FrozenRows/FrozenCols property.
+- Bugfix in the ValidateEdit event when showing a message box inside the event.
 
 02-Mar-2021
-- Revision update. (Version 1.4.38)
-
-01-Mar-2021
-- Revision update. (Version 1.4.37)
+- The TextHeight function does not return 0 anymore when passing an empty string.
+  Instead it returns TMHeight (TEXTMETRIC). TextWidth is unchanged and keeps returning 0 on an empty string.
+  This behavior is now the same as in a VB.Form's TextHeight/TextWidth function.
 
 28-Feb-2021
-- Revision update. (Version 1.4.36)
+- Included new enum 'FlexMousePointerConstants' which the MousePointer property now uses.
+  Reason is that the VBA environment does not support IPerPropertyBrowsing.
+- Included the EditContextMenu event.
 
 27-Feb-2021
-- Revision update. (Version 1.4.35)
-
-27-Feb-2021
-- Revision update. (Version 1.4.34)
+- Bugfix in the AutoSize method when using IVBFlexDataSource.
+- FindItem function can now be used (not disabled anymore) when using IVBFlexDataSource.
+- Some minor internal improvements.
 
 25-Feb-2021
-- Revision update. (Version 1.4.33)
+- Some minor internal improvements.
 
 26-Jan-2021
-- Revision update. (Version 1.4.32)
-
-26-Jan-2021
-- Revision update. (Version 1.4.31)
+- FixedRows property now using RCPF_FORCETOPROWMASK.
+- FixedCols property now using RCPF_FORCELEFTCOLMASK.
+- Rows/Cols/FixedRows/FixedCols property now using RCPF_FORCEREDRAW.
 
 17-Nov-2020
-- Revision update. (Version 1.4.30)
+- Setting ADO DataSource will predefine the column keys. (.ColKey(i) property)
 
 14-Nov-2020
-- Revision update. (Version 1.4.29)
+- Exception for Rows/Cols property to be able to scroll, if necessary.
+  This is related to 13-Nov-2020 update.
 
 13-Nov-2020
-- Revision update. (Version 1.4.28)
-
-14-Aug-2020
-- Revision update. (Version 1.4.27)
-
-14-Aug-2020
-- Revision update. (Version 1.4.26)
+- Bugfix that the ScrollBars property did not made a limitation for the scrolling.
+  This is the same behavior now as in the in the MS(H)FlexGrid control.
 
 11-Aug-2020
-- Revision update. (Version 1.4.25)
-
-10-Aug-2020
-- Revision update. (Version 1.4.24)
+- Bugfix in the ForeColorFixed property.
 
 09-Aug-2020
-- Revision update. (Version 1.4.23)
+- OCX supports accelerator keys in a VBA environment.
 
 02-Aug-2020
-- Revision update. (Version 1.4.22)
+- Internal function ComboShowDropDown will call RefreshMousePointer function when current hCursor is NULL.
 
 05-Jul-2020
-- Revision update. (Version 1.4.21)
+- The ellipsis on a ComboButton can now drawn with COLOR_HOTLIGHT when mouse is over it.
+  This only affects when visual styles are off.
 
 28-May-2020
-- Revision update. (Version 1.4.20)
+- WM_UNICHAR handler now supports surrogate pairs. (UTF32 conversion)
 
 26-May-2020
-- Revision update. (Version 1.4.19)
-
-26-May-2020
-- Revision update. (Version 1.4.18)
-
-26-May-2020
-- Revision update. (Version 1.4.17)
-
-17-May-2020
-- Revision update. (Version 1.4.16)
+- Massive performance boost for Get .Clip property.
+  The string concatenation was done by using small buffer chunks putting together.
+  Now the VB6 poor man's string builder is used from wqweto. (but using a string array instead of a collection)
 
 13-May-2020
-- Revision update. (Version 1.4.15)
-
-12-May-2020
-- Revision update. (Version 1.4.14)
+- Performance boost for drawing custom cell background colors.
 
 11-May-2020
-- Revision update. (Version 1.4.13)
-
-11-May-2020
-- Revision update. (Version 1.4.12)
+- CS_VREDRAW and CS_HREDRAW are not specified anymore as entire redraw upon resize is not necessary.
 
 10-May-2020
-- Revision update. (Version 1.4.11)
-
-10-May-2020
-- Revision update. (Version 1.4.10)
+- Performance boost for drawing the grid.
+  - ~2% for using of Polyline API (not PolylineTo !) instead of MoveToEx and LineTo. (for the grid lines)
+    Polyline is at device driver level, thus faster than LineTo and it doesn't change current position.
+  - ~1% for using of PatBlt API instead of FillRect. (FillRect is a wrapper of PatBlt SelectObject'ing the specified Brush)
+  - ~5% by preserving the memory bitmap (DoubleBuffer) for WM_PAINT and re-create only upon WM_SIZE.
 
 26-Apr-2020
-- Revision update. (Version 1.4.9)
+- Bugfix in the GetClipboardText function in Common.bas.
 
 19-Apr-2020
-- Revision update. (Version 1.4.8)
+- Internal improvement in VBFlexGridBase.bas.
 
 15-Apr-2020
-- Revision update. (Version 1.4.7)
-
-15-Apr-2020
-- Revision update. (Version 1.4.6)
+- Modified OLEGuids.tlb as following: (compiled with same uuid)
+  - included hWnd param for IOleInPlaceActiveObjectVB and IOleControlVB
+  Unregister to old OLEGuids.tlb is not necessary, just overwrite the file.
+- Returning a zero KeyChar in the EditKeyPress event will not cause anymore a beep. (like in a TextBox control)
 
 09-Apr-2020
-- Revision update. (Version 1.4.5)
+- Bugfix in the CellPicture property. It now returns as 'IPictureDisp' instead of 'IPicture'.
 
 07-Apr-2020
-- Revision update. (Version 1.4.4)
+- Major internal improvement as no WM_MOUSEACTIVATE overhead necessary anymore.
+  This results for 'FlexTopParentValidateControls' being obselete and was removed!
 
 31-Mar-2020
-- Revision update. (Version 1.4.3)
+- Bugfix in the internal MoveNextRow and MoveNextCol function.
 
 22-Mar-2020
-- Revision update. (Version 1.4.2)
+- Bugfix in the CreateGDIFontFromOLEFont function. (Common.bas)
 
 24-Feb-2020
-- Revision update. (Version 1.4.1)
+- Bugfix in the ShowLabelTips property that it didn't show on fixed cells.
 
-10-Feb-2020
-- First release. (Version 1.4.0)
+06-Feb-2020
+- Improvement (cosmetic, not a bug) in VTableHandle.bas so that IOleControl do not disturb anymore in IDE on debugging.
+  This affects only the Std-EXE version (not OCX) and only when setting breakpoints. (F9, F8 etc.)
+
+05-Jan-2020
+- Improvement in VTableHandle.bas as IPerPropertyBrowsing must NOT be subclassed anymore.
+  No VTable remains subclassed, therefore VTableSubclass.cls got obselete and was removed!
+- Modified OLEGuids.tlb as following: (compiled with same uuid)
+  - bugfix interface IPerPropertyBrowsing.
+  Unregister to old OLEGuids.tlb is not necessary, just overwrite the file.
+
+03-Jan-2020
+- Improvement in VTableHandle.bas as IOleControl must NOT be subclassed anymore.
+  It is necessary to replace also all controls. (.ctl)
+
+23-Dec-2019
+- Major performance boost for the 'DataSource' property. (ADO's GetRows method now used)
+
+09-Oct-2019
+- Change of how to achieve DPI-awareness to the controls for non-integral DPI.
+  It's just a better technique now which reduces the number of resizes.
+  However, the change has no visible impact for the end-user.
+
+19-Aug-2019
+- Minor internal improvement for ValidateEdit behavior.
+
+27-Jul-2019
+- Included the DirectionAfterReturn property. It allows to move the position of the current cell when the user presses return (Enter) key.
+  This property works in conjunction with the WrapCellBehavior property. (like the TabBehavior property does)
+
+16-Jul-2019
+- Included the WantReturn property. Indicates when the user presses RETURN to perform the default button or to allow the flex grid to handle the return key.
+  But it applies only when there is any default button on the form.
+
+17-Jun-2019
+- Included the ColFormat run-time property.
+- Included additional FlexEditReasonBackSpace enum const. Pressing the backspace key then starts cell editing and removes all content.
+
+14-Jun-2019
+- Included additional PictureAlignment enum constants to allow pictures to not overlap with the text.
+
+03-Jun-2019
+- If drop-down list extends beyond bottom edge of the screen (MonitorFromWindow API) then it will be displayed above the edit window.
+  Just like a normal ComboBox would behave.
+
+23-May-2019
+- Usage of SPI_GETFOCUSBORDERWIDTH/SPI_GETFOCUSBORDERHEIGHT for correct focus rect drawing.
+- Minor bugfix related to 14-May-2019 update.
+
+22-May-2019
+- Included the ComboMode/ColComboMode run-time property that allows to use combo functionality when editing a cell, it returns/sets.
+  - FlexComboModeNone -> Normal editing.
+  - FlexComboModeDropDown -> Allows to modify by drop-down list only.
+  - FlexComboModeEditable -> Allows to modify by normal editing and drop-down list.
+  - FlexComboModeButton -> Allows to modify by button only, which is a request to open a custom editor.
+- Included the ComboButtonValue run-time property which sets the value of the combo button by code, it returns/sets:
+  - FlexComboButtonValueUnpressed -> Normal.
+  - FlexComboButtonValuePressed -> Shows drop-down list or raises ComboButtonClick. (depending on ComboMode)
+  - FlexComboButtonValueDisabled -> Cannot click, grayed and closes up drop-down list if necessary.
+- Included ComboItems/ColComboItems run-time property defines the strings to be used for a drop-down list.
+  Each item is separated with "|". If ComboMode property is Button then this property is ignored.
+- ComboList/ComboListCount/ComboListIndex run-time property are helping to interact with the drop-down list by code.
+- ComboDropDown/ComboCloseUp event, which occurs only when ComboMode is DropDown or Editable.
+- ComboButtonClick event, which occurs only when ComboMode is Button.
+- Included ComboButtonDrawMode run-time property and corresponding ComboButtonOwnerDraw event.
+
+19-May-2019
+- Bugfix in the Picture property. (related to 08-May-2019 update)
+
+14-May-2019
+- Eliminated run-time limitation of no support for having fixed cell(s) without cell(s). (e.g. FixedRows = 1 and Rows = 1)
+
+10-May-2019
+- Finetuning concerning RightToLeftLayout for in-cell editing window.
+
+09-May-2019
+- Bugfix related to 08-May-2019 update.
+
+08-May-2019
+- Major drawing performance boost. (~20%)
+
+07-May-2019
+- Bugfix related to 06-May-2019 update concerning in-cell editing window.
+
+06-May-2019
+- When in-cell editing window is scrolled off then any key input will now bring it back into view.
+- Included WS_CLIPCHILDREN on VBFlexGridWndClass creation.
+
+05-May-2019
+- Included enum FlexSelectionModeFreeByRow and FlexSelectionModeFreeByColumn in the SelectionMode property.
+
+01-May-2019
+- Row/Col params in the BeforeEdit event now ByRef instead ByVal.
+
+25-Apr-2019
+- Finetuning with WM_NCCALCSIZE/WM_NCHITTEST/WM_NCPAINT for in-cell editing window.
+
+23-Apr-2019
+- Bugfix in the internal FlexTopParentValidateControls function.
+
+17-Apr-2019
+- Bugfix related to 15-Apr-2019 update when scrolling while editing fixed cells.
+- Finetuning with EM_SETMARGINS for in-cell editing window.
+
+15-Apr-2019
+- Scrolling will now update the in-cell editing window accordingly.
+
+13-Apr-2019
+- Included the in-cell editing functionality.
+  - AllowUserEditing property.
+  - StartEdit/CancelEdit/CommitEdit method. (works even if AllowUserEditing is False)
+  - BeforeEdit/EnterEdit/ValidateEdit/LeaveEdit/AfterEdit events.
+  - EditSetupStyle/EditSetupWindow/EditQueryClose/EditChange/EditKeyDown/EditKeyUp/EditKeyPress events.
+  - hWndEdit/EditRow/EditCol/EditReason/EditCloseMode read-only run-time property.
+  - EditText/EditMaxLength/EditSelStart/EditSelLength/EditSelText run-time property.
+- Included the IMEMode property.
+- Included the GetMergedRange method.
+
+12-Apr-2019
+- Merged cells are now able to fetch custom data source 'FlexDataSource'.
+
+11-Apr-2019
+- Minor modification in the internal ProcessKeyDown method.
+
+10-Apr-2019
+- Minor modification in the WM_LBUTTONDOWN handler.
+
+04-Apr-2019
+- Included optional parameter Row and Col in the CellEnsureVisible method.
+  So instead the current cell an arbitrary cell can now be ensured to be visible, scrolling if necessary.
+
+03-Apr-2019
+- Bugfix in CellWrapBehavior property.
+  It didn't work as expected when there were hidden or zero height/width rows/cols.
+
+02-Apr-2019
+- Bugfix in FormatString property when no alignment prefix for a column was specified.
+  FlexAlignmentGeneral is now used then instead of FlexAlignmentLeftCenter.
+
+26-Mar-2019
+- Minor bugfix in the WM_MOUSEACTIVATE handler.
+
+24-Mar-2019
+- Compatibility fix for the CellWidth/CellHeight property.
+
+18-Mar-2019
+- Internal performance improvement.
+
+10-Mar-2019
+- Improvement in VTableHandle.bas concerning 'DeactivateIPAO'.
+
+02-Mar-2019
+- More user friendly behavior when SelectionMode is ByRow/ByCol and pressing cursor keys.
+
+26-Feb-2019
+- Included the CellClick and CellDblClick event.
+
+30-Jan-2019
+- CellPicture property can now render 32bpp alpha bitmaps.
+
+23-Jan-2019
+- VBA bugfix.
+
+17-Jan-2019
+- Improvement in VTableHandle.bas concerning 'DeactivateIPAO'.
+
+09-Nov-2018
+- Internal improvement concerning design-mode handling.
+
+26-Oct-2018
+- Bugfix related to 25-Oct-2018 update.
+- Minor internal improvements.
+
+25-Oct-2018
+- Internal improvement concerning divider drag of the last row or col.
+
+09-Oct-2018
+- WM_SYSKEYDOWN/WM_SYSKEYUP considered now for KeyDown/KeyUp events.
+
+04-Oct-2018
+- RowID/RowIndex property included. The usage is similar to the ColKey/ColIndex property.
+  RowIndex returns a row given its ID, whereas RowID returns/sets the ID given its row.
+
+27-Sep-2018
+- Included the SingleLine property.
+
+12-Sep-2018
+- Included optional argument Direction in the FindItem function. Also FindItem cannot be used anymore on a fixed row.
+
+11-Sep-2018
+- Included the FlexDataSource property (run-time only) to set a custom data source which fetches data from the IVBFlexDataSource interface.
+  It comes along with several limitations (e.g. cannot use .Sort) and the behavior/definitions are similar to the IVSFlexDataSource from VSFlexGrid.
+- Included the DataRefresh method which forces the control to re-fetch all data from its data source. (and/or custom data source)
+- Included optional argument Wrap in the FindItem function.
+- The AddItem method now respects the ClipMode property setting.
+
+04-Sep-2018
+- Included optional argument ExcludeHidden in the FindItem function.
+- Added WS_EX_TRANSPARENT for the internal tooltip control which solved two issues:
+  - The control did not receive focus when clicking on a tip from another control.
+  - In Win10 the mouse wheel will scroll even if the mouse hovers over a tip. (in-place tip)
+
+03-Sep-2018
+- Bugfix in the Cell property for FlexCellSort setting.
+
+27-Aug-2018
+- Further optimization of the internal GetHitTestInfo function.
+
+26-Aug-2018
+- Major performance boost for internal GetHitTestInfo function.
+
+12-Aug-2018
+- TEXTMETRIC structure was declared as ANSI. Fixed to WIDE version.
+  Unicode did not lack due to this bug, but it was a memory risk as WIDE version is larger than ANSI.
+
+28-Jul-2018
+- Internal GDI leak fixed. (forgot to restore old font handle in a hDCScreen)
+
+09-Jul-2018
+- Bugfix in the WrapCellBehavior property. Bug only affected when SelectionMode was ByRow or ByColumn.
+
+02-May-2018
+- Renamed enum 'FlexClipModeIncludeHidden' to 'FlexClipModeNormal'.
+- Included optional argument ExcludeHidden in the AutoSize method.
+
+22-Apr-2018
+- Included the ClipMode property that controls whether to include or exclude hidden cells in a clip command.
+
+20-Apr-2018
+- Internal bugfix in page scroll up and down in relation to zero width rows.
+- WM_LBUTTONDOWN intercepted (no MouseDown event) in case of divider row/col dragging.
+  This is the same behavior as in the original MS(H)FlexGrid.
+
+16-Apr-2018
+- Bugfix in the CellFontName property, related to update on 05-Dec-2017. (This bug had only effect when FillStyle is set to FlexFillStyleRepeat)
+
+14-Mar-2018
+- Optimized the divider row/col dragging.
+- Included the HitRowDivider/HitColDivider property which returns the divider row/col from the last invoked .HitTest.
+  The divider row/col contains already the necessary offset for FlexHitResultDividerRowTop and FlexHitResultDividerColumnLeft.
+  In addition the offset includes hidden rows/cols. (zero width rows/cols are not offset to preserve MSFlexGrid compatibility)
+
+13-Mar-2018
+- Included the DividerDblClick event.
+
+09-Mar-2018
+- Bugfix related to custom sorting bugfix on 08-Mar-2018.
+
+08-Mar-2018
+- Critical bugfix for custom sorting. (FlexSortCustom)
+- Included enum FlexSortCurrencyAscending/FlexSortCurrencyDescending and FlexSortDateAscending/FlexSortDateDescending in Sort/ColSort property.
+
+04-Mar-2018
+- Bugfix in VTableHandle.bas related to 25-Feb-2018 update. (concerns unload stability in IDE only)
+
+25-Feb-2018
+- Major internal improvement in the VTableHandle.bas concerning IOleInPlaceActiveObject.
+
+20-Feb-2018
+- Unicode support when generating ASCII key combos, e.g. ALT + 3333.
+
+11-Feb-2018
+- Included the AutoSize method.
+
+23-Jan-2018
+- Included the TextWidth/TextHeight function that calculates for the current or an arbitrary cell the width and height length.
+  For multiline text the heights are cumulated and for the width the line with the greatest width is taken. Similar to VB.Form's TextWidth function.
+
+21-Dec-2017
+- Improved the WM_MOUSEWHEEL handler for fine-grained wheel changes.
+
+09-Dec-2017
+- Improved VTableHandle.bas so it does not crash anymore when using VBCCRxx.OCX and VBFLXGRDxx.OCX in paralell. (concerns ActiveX control only)
+
+05-Dec-2017
+- Major performance fix. (Caused by update on 23-Nov-2017)
+- Bugfix in the CellFontName property.
+  A change will now overwrite the CellFontCharset settings.
+
+23-Nov-2017
+- Final tweak to run in the VBA environment. (meaningful for OCX only)
+
+22-Nov-2017
+- Minor internal improvements.
+
+18-Nov-2017
+- Bugfix for generic sorting.
+
+27-Oct-2017
+- Again minor tweaks to run better in the VBA environment. (meaningful for OCX only)
+
+20-Oct-2017
+- Minor tweaks to run better in the VBA environment. (meaningful for OCX only)
+
+26-Sep-2017
+- Included the BeforeMouseDown event.
+  The event is identical as in the MouseDown event, but an additional Cancel parameter allows you to prevent the default processing.
+
+22-Sep-2017
+- Minor bugfix in the internal GetHitTestInfo function.
+
+19-Sep-2017
+- Included the FormatString property.
+- Bugfix that the FixedAlignment returned not the ColAlignment when not preset.
+- FixedAlignment accepts now a value of -1 so that it is not preset anymore.
+
+17-Sep-2017
+- The Rows/Cols property can now be set lower or equal to the FixedRows/FixedCols property without raising an error.
+  Like in the MS(H)FlexGrid the FixedRows/FixedCols property will be adjusted then accordingly.
+
+02-Sep-2017
+- The Font property is not written to the property bag anymore when it equals to Ambient.Font.
+  Included new function OLEFontIsEqual in Common.bas.
+
+01-Sep-2017
+- Included the ClipSeparators property which enables to define two custom distinct characters to be used in clip strings.
+
+26-Aug-2017
+- Alpha (32bpp) icons in 'CellPicture' now drawn correctly per DrawIconEx instead of Picture.Render.
+
+07-Aug-2017
+- The HelpContextID and WhatsThisHelpID property is now also available when setting to a shadow object. ('Set' command)
+
+27-Jul-2017
+- Internal "DPI Aware" improvements.
+  Improved the functions PixelsPerDIP_X/PixelsPerDIP_Y in Common.bas.
+
+25-Jul-2017
+- Pixels in the property bag are now treated as DIPs. (Device-independent pixels)
+  There is no compatibility break in the property bag when there were saved at 100% (96) DPI.
+  Included new functions PixelsPerDIP_X/PixelsPerDIP_Y in Common.bas.
+  This "DPI Aware" enhancement affects the RowHeightMin/RowHeightMax and ColWidthMin/ColWidthMax property.
+
+24-Jul-2017
+- Included the EllipsisFormatFixed property which enables the setting to be differentiated between fixed and non-fixed cells.
+
+23-Jul-2017
+- Included the DataSource/DataMember property which allows to bind an Adodc control, DateEnvironment designer or ADODB.Recordset object.
+  A reference to the msdatsrc.tlb (pre-installed since Win2k) is required.
+  The new conditional compiliation constant 'ImplementDataSource' controls if the new feature is turned on.
+  If turned off the 'DataBindingBehavior' might be changed back from 'vbComplexBound' to 'vbNone'.
+
+13-Jul-2017
+- Major internal improvement in the VTableHandle.bas
+  It is necessary to replace also the control. (.ctl)
+  Improvement is that no workaround is necessary anymore when the control is embedded into another UserControl.
+
+21-Jun-2017
+- Included the Cell property which allows to get or set cell settings directly for an arbitrary cell or range of cells without selecting them.
+
+14-Jun-2017
+- First release.

@@ -1,13 +1,13 @@
 VERSION 5.00
-Begin VB.PropertyPage PPVBFlexGridStyle 
+Begin VB.Form PPVBFlexGridStyle 
    Caption         =   "Style"
-   ClientHeight    =   6600
+   ClientHeight    =   7425
    ClientLeft      =   0
    ClientTop       =   0
    ClientWidth     =   6225
    LockControls    =   -1  'True
    PaletteMode     =   0  'Halftone
-   ScaleHeight     =   6600
+   ScaleHeight     =   7425
    ScaleWidth      =   6225
    Begin VB.CheckBox CheckSingleLine 
       Alignment       =   1  'Right Justify
@@ -250,16 +250,16 @@ Begin VB.PropertyPage PPVBFlexGridStyle
 End
 Attribute VB_Name = "PPVBFlexGridStyle"
 Attribute VB_GlobalNameSpace = False
-Attribute VB_Creatable = True
+Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
-Attribute VB_Exposed = True
+Attribute VB_Exposed = False
 Option Explicit
 Private Const WM_UPDATEUISTATE As Long = &H128
 Private Const UIS_CLEAR As Long = 2, UISF_HIDEFOCUS As Long = &H1, UISF_HIDEACCEL As Long = &H2
 Private Declare Function SendMessage Lib "user32" Alias "SendMessageW" (ByVal hWnd As Long, ByVal wMsg As Long, ByVal wParam As Long, ByRef lParam As Any) As Long
 Private FreezeChanged As Boolean
 
-Private Sub PropertyPage_Initialize()
+Private Sub Form_Load()
 SendMessage PropertyPage.hWnd, WM_UPDATEUISTATE, MakeDWord(UIS_CLEAR, UISF_HIDEFOCUS Or UISF_HIDEACCEL), ByVal 0&
 With ComboGridLines
 .AddItem FlexGridLineNone & " - None"
